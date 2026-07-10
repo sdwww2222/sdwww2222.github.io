@@ -36,3 +36,36 @@ const observer = new IntersectionObserver(
 );
 
 sections.forEach((section) => observer.observe(section));
+
+const setupProjectShowMore = () => {
+  const projectTextBlocks = Array.from(document.querySelectorAll(".project-card p"));
+
+  projectTextBlocks.forEach((textBlock, index) => {
+    textBlock.classList.add("project-card__text", "is-collapsed");
+
+    if (textBlock.scrollHeight <= textBlock.clientHeight + 1) {
+      textBlock.classList.remove("is-collapsed");
+      return;
+    }
+
+    const toggleButton = document.createElement("button");
+    const textId = textBlock.id || `project-text-${index + 1}`;
+
+    textBlock.id = textId;
+    toggleButton.type = "button";
+    toggleButton.className = "show-more-button";
+    toggleButton.textContent = "Show more";
+    toggleButton.setAttribute("aria-controls", textId);
+    toggleButton.setAttribute("aria-expanded", "false");
+
+    toggleButton.addEventListener("click", () => {
+      const isExpanded = textBlock.classList.toggle("is-expanded");
+      toggleButton.textContent = isExpanded ? "Show less" : "Show more";
+      toggleButton.setAttribute("aria-expanded", String(isExpanded));
+    });
+
+    textBlock.insertAdjacentElement("afterend", toggleButton);
+  });
+};
+
+setupProjectShowMore();

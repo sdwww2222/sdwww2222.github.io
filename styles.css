@@ -341,7 +341,6 @@ h3 {
 
 .feature-card p,
 .project-card p,
-.timeline p,
 .contact-panel p {
   color: var(--muted);
 }
@@ -369,50 +368,6 @@ h3 {
 
 .project-card p {
   margin: 18px 0 0;
-}
-
-.timeline {
-  display: grid;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.timeline li {
-  display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: 24px;
-  padding: 0 0 32px;
-  border-left: 2px solid var(--line);
-}
-
-.timeline li:last-child {
-  padding-bottom: 0;
-}
-
-.timeline time {
-  position: relative;
-  left: -2px;
-  display: block;
-  padding-left: 24px;
-  color: var(--gold);
-  font-weight: 900;
-}
-
-.timeline time::before {
-  content: "";
-  position: absolute;
-  top: 11px;
-  left: -5px;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--gold);
-}
-
-.timeline p {
-  margin: 10px 0 0;
 }
 
 .contact-section {
@@ -563,11 +518,6 @@ h3 {
   .button,
   .contact-links a {
     width: 100%;
-  }
-
-  .timeline li {
-    grid-template-columns: 72px minmax(0, 1fr);
-    gap: 16px;
   }
 
   .contact-panel {

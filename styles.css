@@ -225,7 +225,6 @@ h3 {
 }
 
 .button:hover,
-.contact-links a:hover,
 .project-card:hover,
 .feature-card:hover {
   transform: translateY(-2px);
@@ -391,31 +390,21 @@ h3 {
   margin: 18px 0 0;
 }
 
-.contact-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+.contact-details {
+  display: grid;
+  gap: 6px;
   margin-top: 30px;
 }
 
-.contact-links a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 9px 16px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
+.contact-details p {
+  max-width: none;
+  margin: 0;
   color: var(--ink);
   font-weight: 800;
-  transition:
-    transform 180ms ease,
-    border-color 180ms ease;
 }
 
-.contact-links a:hover {
-  border-color: var(--green);
+.contact-details strong {
+  margin-right: 8px;
 }
 
 .site-footer {
@@ -515,8 +504,7 @@ h3 {
     gap: 10px;
   }
 
-  .button,
-  .contact-links a {
+  .button {
     width: 100%;
   }
 

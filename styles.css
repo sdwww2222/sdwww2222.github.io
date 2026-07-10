@@ -347,6 +347,7 @@ h3 {
 .project-list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
   gap: 18px;
 }
 
@@ -373,13 +374,13 @@ h3 {
   white-space: pre-line;
 }
 
-.project-card__text.is-collapsed {
+.project-card__text.is-collapsed:not(.is-expanded) {
   position: relative;
   max-height: 11rem;
   overflow: hidden;
 }
 
-.project-card__text.is-collapsed::after {
+.project-card__text.is-collapsed:not(.is-expanded)::after {
   content: "";
   position: absolute;
   right: 0;
@@ -390,15 +391,9 @@ h3 {
   pointer-events: none;
 }
 
-.project-card__text.is-expanded {
-  max-height: none;
-}
-
-.project-card__text.is-expanded::after {
-  display: none;
-}
-
 .show-more-button {
+  display: inline-flex;
+  align-items: center;
   margin-top: 16px;
   padding: 0;
   border: 0;

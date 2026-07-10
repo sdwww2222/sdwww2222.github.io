@@ -1,71 +1,110 @@
-const header = document.querySelector(".site-header");
-const navLinks = Array.from(document.querySelectorAll(".site-nav a"));
-const year = document.querySelector("#year");
+(function () {
+  var setupProjectShowMore = function () {
+    var projectTextBlocks = Array.prototype.slice.call(document.querySelectorAll(".project-card p"));
 
-if (year) {
-  year.textContent = new Date().getFullYear();
-}
+    projectTextBlocks.forEach(function (textBlock, index) {
+      if (textBlock.dataset.showMoreReady === "true") {
+        return;
+      }
 
-const setHeaderState = () => {
-  header?.classList.toggle("is-scrolled", window.scrollY > 18);
-};
+      var text = textBlock.textContent.trim();
+      var isLongText = text.length > 180 || text.split(/\n+/).length > 4;
 
-setHeaderState();
-window.addEventListener("scroll", setHeaderState, { passive: true });
+      textBlock.classList.add("project-card__text");
+      textBlock.dataset.showMoreReady = "true";
 
-const sections = navLinks
-  .map((link) => document.querySelector(link.getAttribute("href")))
-  .filter(Boolean);
+      if (!isLongText) {
+        return;
+      }
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    const visible = entries
-      .filter((entry) => entry.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      textBlock.classList.add("is-collapsed");
 
-    if (!visible) return;
+      var toggleButton = document.createElement("button");
+      var textId = textBlock.id || "project-text-" + (index + 1);
 
-    navLinks.forEach((link) => {
-      link.classList.toggle("is-active", link.getAttribute("href") === `#${visible.target.id}`);
+      textBlock.id = textId;
+      toggleButton.type = "button";
+      toggleButton.className = "show-more-button";
+      toggleButton.textContent = "Show more";
+      toggleButton.setAttribute("aria-controls", textId);
+      toggleButton.setAttribute("aria-expanded", "false");
+
+      toggleButton.addEventListener("click", function () {
+        var isExpanded = textBlock.classList.toggle("is-expanded");
+
+        toggleButton.textContent = isExpanded ? "Show less" : "Show more";
+        toggleButton.setAttribute("aria-expanded", String(isExpanded));
+      });
+
+      textBlock.insertAdjacentElement("afterend", toggleButton);
     });
-  },
-  {
-    rootMargin: "-35% 0px -45% 0px",
-    threshold: [0.15, 0.35, 0.6],
-  },
-);
+  };
 
-sections.forEach((section) => observer.observe(section));
+  var setupHeader = function () {
+    var header = document.querySelector(".site-header");
+    var navLinks = Array.prototype.slice.call(document.querySelectorAll(".site-nav a"));
+    var year = document.querySelector("#year");
 
-const setupProjectShowMore = () => {
-  const projectTextBlocks = Array.from(document.querySelectorAll(".project-card p"));
+    if (year) {
+      year.textContent = new Date().getFullYear();
+    }
 
-  projectTextBlocks.forEach((textBlock, index) => {
-    textBlock.classList.add("project-card__text", "is-collapsed");
+    var setHeaderState = function () {
+      if (header) {
+        header.classList.toggle("is-scrolled", window.scrollY > 18);
+      }
+    };
 
-    if (textBlock.scrollHeight <= textBlock.clientHeight + 1) {
-      textBlock.classList.remove("is-collapsed");
+    setHeaderState();
+    window.addEventListener("scroll", setHeaderState, { passive: true });
+
+    if (!("IntersectionObserver" in window)) {
       return;
     }
 
-    const toggleButton = document.createElement("button");
-    const textId = textBlock.id || `project-text-${index + 1}`;
+    var sections = navLinks
+      .map(function (link) {
+        var target = link.getAttribute("href");
 
-    textBlock.id = textId;
-    toggleButton.type = "button";
-    toggleButton.className = "show-more-button";
-    toggleButton.textContent = "Show more";
-    toggleButton.setAttribute("aria-controls", textId);
-    toggleButton.setAttribute("aria-expanded", "false");
+        return target ? document.querySelector(target) : null;
+      })
+      .filter(Boolean);
 
-    toggleButton.addEventListener("click", () => {
-      const isExpanded = textBlock.classList.toggle("is-expanded");
-      toggleButton.textContent = isExpanded ? "Show less" : "Show more";
-      toggleButton.setAttribute("aria-expanded", String(isExpanded));
+    var observer = new IntersectionObserver(
+      function (entries) {
+        var visible = entries
+          .filter(function (entry) {
+            return entry.isIntersecting;
+          })
+          .sort(function (a, b) {
+            return b.intersectionRatio - a.intersectionRatio;
+          })[0];
+
+        if (!visible) return;
+
+        navLinks.forEach(function (link) {
+          link.classList.toggle("is-active", link.getAttribute("href") === "#" + visible.target.id);
+        });
+      },
+      {
+        rootMargin: "-35% 0px -45% 0px",
+        threshold: [0.15, 0.35, 0.6],
+      },
+    );
+
+    sections.forEach(function (section) {
+      observer.observe(section);
     });
+  };
 
-    textBlock.insertAdjacentElement("afterend", toggleButton);
-  });
-};
+  var init = function () {
+    setupProjectShowMore();
+    setupHeader();
+  };
 
-setupProjectShowMore();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
